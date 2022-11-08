@@ -1,9 +1,9 @@
 <?php
 
 /**
- * FUNCTIONS
+ * Lite FUNCTIONS
  */
-class FUNCTIONS
+class lite
 {
     public $email;
 
