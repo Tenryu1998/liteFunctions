@@ -1,24 +1,4 @@
 <?php
-namespace App\Core;
-use Illuminate\Support\Facades\DB;
-
-use App\Core\Admin\USERS;
-use App\Core\ACCOUNT;
-use App\Core\FILTER;
-use DateTime;
-
-
-use App\Models\UsersLog;
-use App\Models\UpdateLog;
-
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use kornrunner\Keccak;
-use kornrunner\Secp256k1;
-use Illuminate\Support\Str;
-use Elliptic\EC;
-use Elliptic\Utils as EC_Utils;
 
 /**
  * FUNCTIONS
@@ -73,23 +53,6 @@ class FUNCTIONS
     }
 
 
-    //TO CONVERT A GIVEN TIMESTAMP
-    public function convert_time($timestamp,$to) {
-        $time = "";
-        if ($timestamp != "") {
-            //$timestamp = strtotime($timestamp);
-        }
-        if ($timestamp != "") {
-            if ($to == "full") {
-                $time = date('m-d-Y H:i:s', $timestamp);
-            }elseif ($to == "date") {
-                $time = date('m-d-Y', $timestamp);
-            }
-        }
-        return $time;
-        
-    }
-
 
     //TO GET PERCENTAGE
     public function progress($current_data,$max_data) {
@@ -117,16 +80,6 @@ class FUNCTIONS
         }
         return $p;
     }
-
-
-    public function convertCurrency($amt,$rate,$decimals) {
-        if ($rate > 0 && $amt > 0) {
-        return $amt * $rate;
-
-        }
-        return round($amt,$decimals);
-    }
-
 
 
 
@@ -176,37 +129,7 @@ class FUNCTIONS
         return $timestring; 
     }
 
-    public function CONSTRUCT_duration($time) {
-        $now = time();
-        $diff = $time - $now;
-
-        $years = intval($diff/(60 * 60 * 24 * 365));
-        $rem = $diff%(60 * 60 * 24 * 365);
-        $months = intval($rem/(60 * 60 * 24 * 30));
-        $rem = $rem%(60 * 60 * 24 * 30);
-        $days = intval($rem/(60 * 60 * 24));
-
-        $y = "year";
-        $m = "month";
-        $d = "day";
-
-        if ($years > 1) $y = $y;
-        if ($months > 1) $m = $m;
-        if ($days > 1) $d = $d;
-
-
-        if ($days>0) $timestring = $days."$d";
-        if ($months>0) $timestring = $months."$m ".$days."$d";
-        if ($years>0) $timestring = $years."$y ".$months."$m ".$days."$d";
-
-        if ($diff < 1) {
-            return null;
-        }else {
-            return $timestring;
-        }
-
-        
-    }
+   
 
 
     public function myUrlEncode($string) {
@@ -528,34 +451,7 @@ class FUNCTIONS
             return $number. $ends[$number % 10];
     }
 
-    public function IPCountryData()
-    { 
-        $data['countryCode'] = 'NG';
-        $data['currencySymbol'] = 'N';
-        $data['currencyCode'] = 'NGN';
-        $data['default'] = true;
-        $data['usdRate'] = 1000;
-        $data['canUseLocal'] = true;
-        $data['banks'] = '';
-        $ip = null;
-        try {
-            $ip = $this->ip_data();
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-        if (!empty($ip)) {
-            if ($ip['geoplugin_currencyCode'] != 'USD') {
-                $data['default'] = false;
-                $data['countryCode'] = $ip['geoplugin_countryCode'];
-                $data['currencySymbol'] = $ip['geoplugin_currencySymbol_UTF8'];
-                $data['currencyCode'] = $ip['geoplugin_currencyCode'];
-                $data['usdRate'] = $ip['geoplugin_currencyConverter'];
-            }
-        }
-
-        return $data;
-    }
-
+   
 
     
     function time_elapsed_string($datetime, $full = false) {
@@ -678,14 +574,7 @@ class FUNCTIONS
         return new LengthAwarePaginator($items->forPage($page,$perPage),$items->count(),$perPage,$page,$options);
     
     }   
-    public function adminTable($table,$id)
-    {
-        $t = [];
-        if ($table == "users") {
-            $t = (new USERS())->table($id); 
-        }
-        return $t;
-    }
+    
 
     public function getProp($obj,$key)
     {
@@ -703,14 +592,7 @@ class FUNCTIONS
     }
 
 
-    public function pluralOrSingilular($c,$n,$s)
-    {
-        if ($c > 1) {
-            return $n.$s;
-        }
-        return $n;
-    }
-
+    
     public function csv2Array($csv)
     {
         return explode(",",$csv);
@@ -953,10 +835,6 @@ public function allArrayKeysExist($array,$keys)
     return false;
 }
 
-public function getAccount($wallet)
-{
-    return (new ACCOUNT($wallet));
-}
 
 
     public function transverseMatrix($x,$y,$i,$dir)
